@@ -1,4 +1,6 @@
 using ElevatorControl.Contracts.Interfaces;
+using ElevatorControl.Contracts.Interfaces.DAL;
+using ElevatorControl.DataAccessLayer;
 using ElevatorControl.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,7 +29,10 @@ namespace ElevatorControlService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IElevatorService, ElevatorService>();
+            // adding singleton purely for testing/persist data across requests
+            // in prod we would use scoped or transient
+            services.AddSingleton<IElevatorDatabase, ElevatorDatabaseMock>(); 
+            services.AddTransient<IElevatorService, ElevatorService>();
             services.AddControllers();
         }
 
